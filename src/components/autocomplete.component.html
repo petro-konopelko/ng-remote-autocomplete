@@ -1,0 +1,22 @@
+﻿<div>
+    <input [attr.id]="inputId" [attr.class]="inputClass"/>
+    <div class="autocomplete" *ngIf="searchState !== searchStates.Untracked">
+        <div *ngIf="searchState === searchStates.InProgress || searchState === searchStates.Finished && (!searchResults || searchResult.length === 0)">
+            <div>{{searchState === searchStates.InProgress ? searchingText : notFoundText}}</div>
+        </div>
+
+        <div *ngIf="searchState === searchStates.Finished && searchResult?.length > 0">
+            <div *ngIf="displayFormat; else customTemplate">
+                <div *ngFor="let item of searchResult">
+                    <div></div>
+                </div>
+            </div>
+            <ng-template #customTemplate>
+                <div *ngFor="let item of searchResult">
+                    <ng-content [item]="item"></ng-content>
+                </div>
+            </ng-template>
+        </div>
+
+    </div>
+</div>
