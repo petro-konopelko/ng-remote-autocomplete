@@ -1,5 +1,5 @@
 ﻿export enum SearchStateType {
     UnTracked,
-    InProgress,
+    Loading,
     Finished
 }

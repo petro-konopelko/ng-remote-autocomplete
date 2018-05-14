@@ -1,22 +1,21 @@
 ﻿<div>
-    <input [attr.id]="inputId" [attr.class]="inputClass"/>
+    <input [attr.id]="inputId" [attr.class]="inputClass" (keypress)="onKeypress($event)" (ngModel)="searchValue" />
     <div class="autocomplete" *ngIf="searchState !== searchStates.Untracked">
-        <div *ngIf="searchState === searchStates.InProgress || searchState === searchStates.Finished && (!searchResults || searchResult.length === 0)">
-            <div>{{searchState === searchStates.InProgress ? searchingText : notFoundText}}</div>
+        <div *ngIf="searchState === searchStates.Loading || searchState === searchStates.Finished && (!searchResult || searchResult.length === 0)">
+            <div>{{searchState === searchStates.Loading ? searchingText : notFoundText}}</div>
         </div>
 
         <div *ngIf="searchState === searchStates.Finished && searchResult?.length > 0">
-            <div *ngIf="displayFormat; else customTemplate">
-                <div *ngFor="let item of searchResult">
-                    <div></div>
-                </div>
-            </div>
-            <ng-template #customTemplate>
-                <div *ngFor="let item of searchResult">
-                    <ng-content [item]="item"></ng-content>
-                </div>
-            </ng-template>
-        </div>
+            <ng-container *ngFor="let item of searchResult">
+                <div class="option">
+                    <ng-template #defaultOptionTemplate>
+                        <div class="ng-value-label">{{displayFormat(item).description}}</div>
+                    </ng-template>
 
+                    <ng-template [ngTemplateOutlet]="optionTemplate || defaultOptionTemplate" [ngTemplateOutletContext]="{ $implicit: item }">
+                    </ng-template>
+                </div>
+            </ng-container>
+        </div>
     </div>
 </div>
