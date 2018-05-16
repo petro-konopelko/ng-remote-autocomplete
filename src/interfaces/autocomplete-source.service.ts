@@ -1,5 +1,5 @@
 ﻿import { Observable } from "rxjs/Observable";
 
-export interface AutocompleteService {
+export interface AutocompleteSourceService {
     get(searchParam: string): Observable<any[]>;
 }

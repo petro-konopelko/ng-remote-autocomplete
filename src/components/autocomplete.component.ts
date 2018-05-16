@@ -11,7 +11,6 @@
 import { Observable } from "rxjs/Observable";
 import { } from 'rxjs/Rx';
 
-import { AutocompleteService } from "../interfaces/autocomplete.service";
 import { AutocompleteItem } from "../interfaces/autocomplete.item";
 
 import {
@@ -20,17 +19,20 @@ import {
     NOT_FOUND_TEXT,
     SEARCHING_TEXT
 } from "../constants/autocomplete.constants";
+
 import { SearchStateType } from "../enums/search-state.type";
-import { iterateListLike } from "@angular/core/src/change_detection/change_detection_util";
-import { OptionTemplateDirective } from "../directives/label.directive";
+import { OptionTemplateDirective } from "../directives/option-template.directive";
+import { ItemListService } from "../services/item-list.service";
+import { AutocompleteSourceService } from "../interfaces/autocomplete-source.service";
 
 @Component({
     selector: 'remote-autocomplete',
-    templateUrl: './autocomplete.component.html'
+    templateUrl: './autocomplete.component.html',
+    styles: [ './autocomplete.component.css' ]
 })
 
 export class AutocompleteConponent implements OnInit {
-    @Input('service') service: AutocompleteService;
+    @Input('service') service: AutocompleteSourceService;
     @Input('display') displayFormat: (item: any) => AutocompleteItem;
     @Input('minChars') minChars: number;
     @Input('pause') pause: number;
@@ -50,6 +52,9 @@ export class AutocompleteConponent implements OnInit {
     public searchStates = SearchStateType;
     public searchState = SearchStateType.UnTracked;
     public searchValue: string;
+
+    constructor(private itemListService: ItemListService) {
+    }
 
     ngOnInit() {
         if (!this.service) {
@@ -72,6 +77,11 @@ export class AutocompleteConponent implements OnInit {
                 this.searchState = this.searchStates.Finished;
             }
         )
+    }
+
+    onMouseEnter(item: any): void{
+       let value = this.displayFormat(item).value;
+       this.searchValue = value;
     }
 
     get inputClass(): string {
