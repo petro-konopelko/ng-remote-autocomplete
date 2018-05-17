@@ -1,11 +1,10 @@
-﻿<div arrow-navigation class="remote-autocomplete">
+﻿<div keyboard-navigation class="remote-autocomplete">
     <input [attr.id]="inputId"
            [attr.class]="inputClass"
-           (keypress)="onKeypress($event)"
-           [(ngModel)]="searchValue"
-           #inputField />
+           (input)="onType($event)"
+           [(ngModel)]="searchValue"/>
     <div class="autocomplete" *ngIf="searchState !== searchStates.Untracked">
-        <div *ngIf="searchState === searchStates.Loading || searchState === searchStates.Finished && (!searchResult || searchResult.length === 0)">
+        <div *ngIf="searchState === searchStates.Loading || searchState === searchStates.Finished && searchResult === 0">
             <div>{{searchState === searchStates.Loading ? searchingText : notFoundText}}</div>
         </div>
 
@@ -17,10 +16,10 @@
                      [ngClass]="{'cmpl-option-active': i === itemListService.activeIndex}"
                      tabindex="0">
                     <ng-template #defaultOptionTemplate>
-                        <div class="ng-value-label">{{displayFormat(item).description}}</div>
+                        <span class="cmpl-option-value">{{item.description}}</span>
                     </ng-template>
 
-                    <ng-template [ngTemplateOutlet]="optionTemplate || defaultOptionTemplate" [ngTemplateOutletContext]="{ $implicit: item }">
+                    <ng-template [ngTemplateOutlet]="optionTemplate || defaultOptionTemplate" [ngTemplateOutletContext]="{ $implicit: item.originalObject }">
                     </ng-template>
                 </div>
             </div>

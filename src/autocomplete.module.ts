@@ -5,8 +5,9 @@ import { FormsModule } from '@angular/forms';
 import { AutocompleteConponent } from "./components/autocomplete.component";
 import { OptionTemplateDirective } from "./directives/option-template.directive";
 import { OptionDirective } from "./directives/option-directve";
-import { ArrowNavigationDirective } from "./directives/arrow-navigation.directive";
 import { ItemListService } from "./services/item-list.service";
+import { KeyboardNavigationDirective } from "./directives/keyboard-navigation.directive";
+import { AutocompleteService } from "./services/autocomplete.service";
 
 @NgModule({
     imports: [
@@ -17,13 +18,14 @@ import { ItemListService } from "./services/item-list.service";
         AutocompleteConponent,
         OptionTemplateDirective,
         OptionDirective,
-        ArrowNavigationDirective
+        KeyboardNavigationDirective
     ],
     exports: [
         AutocompleteConponent,
         OptionTemplateDirective
     ],
     providers: [
+        AutocompleteService,
         ItemListService
     ]
 })

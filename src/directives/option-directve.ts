@@ -1,23 +1,25 @@
-import { 
+import {
     Input,
-    Directive, 
+    Directive,
     HostListener
 } from "@angular/core";
 
 import { ItemListService } from "../services/item-list.service";
-import { ACTIVE_OPTION_CLASS } from "../constants/autocomplete.constants";
+import { AutocompleteService } from "../services/autocomplete.service";
 
 @Directive({
     selector: '[cmpl-option]',
     host: {
         '(mouseenter)': 'onMouseEnter()',
-        '(mouseleave)': 'onMouseLeave()'
+        '(mouseleave)': 'onMouseLeave()',
+        '(click)': 'onClick()'
     }
 })
 export class OptionDirective {
     @Input('itemIndex') index;
 
-    constructor(private itemListService: ItemListService) {
+    constructor(private autocompleteService: AutocompleteService,
+        private itemListService: ItemListService) {
     }
 
     onMouseEnter(event: MouseEvent) {
@@ -25,8 +27,10 @@ export class OptionDirective {
     }
 
     onMouseLeave(event: MouseEvent) {
-        if (this.itemListService.activeIndex === this.index) {
-            this.itemListService.resetActiveIndex();
-        }
+        this.itemListService.restoreIntialActiveIndex();
+    }
+
+    onClick() {
+        this.autocompleteService.selectItemSubject.next(this.index);
     }
 }
