@@ -5,9 +5,11 @@
     Output,
     EventEmitter,
     ContentChild,
-    TemplateRef,
-    OnDestroy
+    TemplateRef,    OnDestroy,
+    forwardRef
 } from "@angular/core";
+
+import { ControlValueAccessor, NG_VALUE_ACCESSOR } from "@angular/forms";
 
 import { Subscription } from 'rxjs/Rx';
 
@@ -30,10 +32,17 @@ import { AutocompleteService } from "../services/autocomplete.service";
 @Component({
     selector: 'remote-autocomplete',
     templateUrl: './autocomplete.component.html',
-    styles: [ './autocomplete.component.css' ]
+    styles: ['./autocomplete.component.css'],
+    providers: [
+        {
+            provide: NG_VALUE_ACCESSOR,
+            useExisting: forwardRef(() => AutocompleteConponent),
+            multi: true
+        }
+    ]
 })
 
-export class AutocompleteConponent implements OnInit, OnDestroy {
+export class AutocompleteConponent implements OnInit, OnDestroy, ControlValueAccessor {
     @Input('service') service: AutocompleteSourceService;
     @Input('minChars') minChars: number;
     @Input('pause') pause: number;
@@ -58,6 +67,7 @@ export class AutocompleteConponent implements OnInit, OnDestroy {
     private oriiginalSearchValue: string;
     private changedHighlightSubscription: Subscription;
     private selectSubscription: Subscription;
+    private propagateChange = (_: any) => { };
 
     constructor(public itemListService: ItemListService,
         public autocompleteService: AutocompleteService) {
@@ -78,7 +88,9 @@ export class AutocompleteConponent implements OnInit, OnDestroy {
         });
 
         this.selectSubscription = this.autocompleteService.selectItemSubject.subscribe((index: number) => {
-            this.selected.emit(this.searchResult[index]);
+            const result = this.searchResult[index];
+            this.propagateChange(result.value);
+            this.selected.emit(result);
             this.autocompleteService.isOpen = false;
             this.searchState = this.searchStates.UnTracked;
         });
@@ -90,6 +102,7 @@ export class AutocompleteConponent implements OnInit, OnDestroy {
     }
 
     onType(): void{
+        this.propagateChange(this.searchValue);
         this.oriiginalSearchValue = this.searchValue;
         this.searchState = this.searchStates.Loading;
 
@@ -105,6 +118,19 @@ export class AutocompleteConponent implements OnInit, OnDestroy {
         )
     }
 
+    writeValue(value: any) {
+        if (value !== undefined) {
+            this.searchValue = value;
+        }
+    }
+
+    registerOnChange(fn: any) {
+        this.propagateChange = fn;
+    }
+
+    registerOnTouched(fn: any) {
+    }
+
     get inputClass(): string {
         let classes: string = '';
 
@@ -116,11 +142,16 @@ export class AutocompleteConponent implements OnInit, OnDestroy {
     }
 
     private onActiveIndexChanged(activeIndex: number): void {
+
         if (activeIndex === DEFAULT_ACTIVE_INDEX) {
             this.searchValue = this.oriiginalSearchValue;
+            this.propagateChange(this.searchValue);
+            this.highlighted.emit(null);
+
         } else {
             const highlightedItem = this.searchResult[activeIndex];
             this.searchValue = highlightedItem.value;
+            this.propagateChange(highlightedItem.value);
             this.highlighted.emit(highlightedItem);
         }
     }
