@@ -1,12 +1,20 @@
 ﻿<div keyboard-navigation class="remote-autocomplete">
-    <input [attr.id]="inputId"
+    <input [(ngModel)]="searchValue"
+           [attr.id]="inputId"
+           [attr.name]="inputName"
            [attr.class]="inputClass"
+           [attr.disabled]="disabled"
+           maxlength="{{maxChars}}"
            (input)="onType($event)"
-           [(ngModel)]="searchValue"
-           (blur)="onInputBlur($event)" />
-    <div class="autocomplete-list" *ngIf="searchState && searchState !== searchStates.Untracked">
-        <div *ngIf="searchState === searchStates.Loading || searchState === searchStates.Finished && searchResult === 0">
-            <div>{{searchState === searchStates.Loading ? searchingText : notFoundText}}</div>
+           (blur)="onInputBlur($event)"
+           #input/>
+    <div *ngIf="searchState && searchState !== searchStates.Untracked">
+        <div *ngIf="searchState === searchStates.Loading">
+            <span [class]="LOADING_CLASS">{{searchingText}}</span>
+        </div>
+
+        <div *ngIf="searchState === searchStates.Finished && searchResult.length === 0">
+            <span [class]="RESULTS_NOT_FOUND_CLASS">{{notFoundText}}</span>
         </div>
 
         <div *ngIf="searchState === searchStates.Finished && searchResult?.length > 0" [class]="OPTION_LIST_WRAPPER_CLASS">
@@ -14,10 +22,10 @@
                  cmpl-option
                  [itemIndex]="i"
                  [class]="OPTION_CLASS"
-                 [ngClass]="{'cmpl-option-active': i === itemListService.activeIndex}">
+                 [ngClass]="{'autocomplete-option-active': i === itemListService.activeIndex}">
                 <ng-template #defaultOptionTemplate>
-                    <span class="cmp-option-value">{{item.value}}</span>
-                    <span *ngIf="item.description" class="cmpl-option-description">{{item.description}}</span>
+                    <span [class]="OPTION_VALUE_CLASS">{{item.value}}</span>
+                    <span *ngIf="item.description" [class]="OPTION_DESCRIPTION_CLASS">{{item.description}}</span>
                 </ng-template>
 
                 <ng-template [ngTemplateOutlet]="optionTemplate || defaultOptionTemplate" [ngTemplateOutletContext]="{ $implicit: item.originalObject }">

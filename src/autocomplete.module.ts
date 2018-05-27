@@ -2,7 +2,7 @@
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
-import { AutocompleteConponent } from "./components/autocomplete.component";
+import { RemoteAutocompleteComponent } from "./components/autocomplete.component";
 import { OptionTemplateDirective } from "./directives/option-template.directive";
 import { OptionDirective } from "./directives/option-directve";
 import { ItemListService } from "./services/item-list.service";
@@ -15,13 +15,13 @@ import { AutocompleteService } from "./services/autocomplete.service";
         FormsModule
     ],
     declarations: [
-        AutocompleteConponent,
+        RemoteAutocompleteComponent,
         OptionTemplateDirective,
         OptionDirective,
         KeyboardNavigationDirective
     ],
     exports: [
-        AutocompleteConponent,
+        RemoteAutocompleteComponent,
         OptionTemplateDirective
     ],
 })
