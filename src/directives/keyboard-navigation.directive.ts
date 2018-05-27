@@ -1,18 +1,23 @@
 import {
     Directive,
-    HostListener
+    HostListener,    ElementRef
 } from "@angular/core";
 
 import { KeyCode } from "../enums/key-kode";
 import { ItemListService } from "../services/item-list.service";
 import { AutocompleteService } from "../services/autocomplete.service";
+import { ScrollService } from "../services/scroll-service";
 
 @Directive({
     selector: '[keyboard-navigation]'
 })
 export class KeyboardNavigationDirective {
+    private readonly scrollService: ScrollService;
+
     constructor(private autocompleteService: AutocompleteService,
-        private itemListService: ItemListService) {
+        private itemListService: ItemListService,
+        private element: ElementRef) {
+        this.scrollService = new ScrollService(element);
     }
 
     @HostListener('keydown', ['$event']) onKeydown(event: KeyboardEvent) {
@@ -33,10 +38,12 @@ export class KeyboardNavigationDirective {
 
     private handleDownKey(event: KeyboardEvent) {
         this.itemListService.activeIndex++;
+        this.scrollService.handleKeyboarOptionNavigation(this.itemListService.activeIndex);
     }
 
     private handleUpKey(event: KeyboardEvent) {
         this.itemListService.activeIndex--;
+        this.scrollService.handleKeyboarOptionNavigation(this.itemListService.activeIndex);
     }
 
     private handleEnter(event: KeyboardEvent) {

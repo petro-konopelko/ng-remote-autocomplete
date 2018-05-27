@@ -20,7 +20,9 @@ import {
     DEFAULT_PAUSE,
     NOT_FOUND_TEXT,
     SEARCHING_TEXT,
-    DEFAULT_ACTIVE_INDEX
+    DEFAULT_ACTIVE_INDEX,
+    OPTION_LIST_WRAPPER_CLASS,
+    OPTION_CLASS
 } from "../constants/autocomplete.constants";
 
 import { SearchStateType } from "../enums/search-state.type";
@@ -32,8 +34,9 @@ import { AutocompleteService } from "../services/autocomplete.service";
 @Component({
     selector: 'remote-autocomplete',
     templateUrl: './autocomplete.component.html',
-    styles: ['./autocomplete.component.css'],
     providers: [
+        AutocompleteService,
+        ItemListService,
         {
             provide: NG_VALUE_ACCESSOR,
             useExisting: forwardRef(() => AutocompleteConponent),
@@ -63,8 +66,10 @@ export class AutocompleteConponent implements OnInit, OnDestroy, ControlValueAcc
     public searchState = SearchStateType.UnTracked;
     public searchValue: string;
     public searchResult: AutocompleteItem[];
+    public OPTION_LIST_WRAPPER_CLASS = OPTION_LIST_WRAPPER_CLASS;
+    public OPTION_CLASS = OPTION_CLASS;
 
-    private oriiginalSearchValue: string;
+    private originalSearchValue: string;
     private changedHighlightSubscription: Subscription;
     private selectSubscription: Subscription;
     private propagateChange = (_: any) => { };
@@ -91,31 +96,13 @@ export class AutocompleteConponent implements OnInit, OnDestroy, ControlValueAcc
             const result = this.searchResult[index];
             this.propagateChange(result.value);
             this.selected.emit(result);
-            this.autocompleteService.isOpen = false;
-            this.searchState = this.searchStates.UnTracked;
+            this.closeAutocomplete();
         });
     }
 
     ngOnDestroy(): void {
         this.changedHighlightSubscription.unsubscribe();
         this.selectSubscription.unsubscribe();
-    }
-
-    onType(): void{
-        this.propagateChange(this.searchValue);
-        this.oriiginalSearchValue = this.searchValue;
-        this.searchState = this.searchStates.Loading;
-
-        this.service.get(this.searchValue).first().subscribe(
-            (results: any[]) => {
-                if (this.searchState !== this.searchStates.UnTracked) {
-                    this.autocompleteService.isOpen = results.length > 0;
-                    this.itemListService.items = results;
-                    this.searchResult = results;
-                    this.searchState = this.searchStates.Finished;
-                }
-            }
-        )
     }
 
     writeValue(value: any) {
@@ -131,6 +118,36 @@ export class AutocompleteConponent implements OnInit, OnDestroy, ControlValueAcc
     registerOnTouched(fn: any) {
     }
 
+    onType(): void{
+        this.propagateChange(this.searchValue);
+        this.originalSearchValue = this.searchValue;
+        this.searchState = this.searchStates.Loading;
+
+        this.service.get(this.searchValue).first().subscribe(
+            (results: any[]) => {
+                if (this.searchState !== this.searchStates.UnTracked) {
+                    this.autocompleteService.isOpen = results.length > 0;
+                    this.itemListService.items = results;
+                    this.searchResult = results;
+                    this.searchState = this.searchStates.Finished;
+                }
+            }
+        )
+    }
+
+    onInputBlur(event: FocusEvent) {
+        if (event.relatedTarget) {
+            let related = <HTMLElement>event.relatedTarget;
+            if (related.classList.contains(this.OPTION_CLASS)) {
+                return;
+            }
+        }
+
+        this.closeAutocomplete();
+
+        this.blur.emit();
+    }
+
     get inputClass(): string {
         let classes: string = '';
 
@@ -142,17 +159,22 @@ export class AutocompleteConponent implements OnInit, OnDestroy, ControlValueAcc
     }
 
     private onActiveIndexChanged(activeIndex: number): void {
+        let highlightedItem: AutocompleteItem;
 
         if (activeIndex === DEFAULT_ACTIVE_INDEX) {
-            this.searchValue = this.oriiginalSearchValue;
-            this.propagateChange(this.searchValue);
-            this.highlighted.emit(null);
-
+            highlightedItem = null;
+            this.searchValue = this.originalSearchValue;
         } else {
-            const highlightedItem = this.searchResult[activeIndex];
+            highlightedItem = this.searchResult[activeIndex];
             this.searchValue = highlightedItem.value;
-            this.propagateChange(highlightedItem.value);
-            this.highlighted.emit(highlightedItem);
         }
+
+        this.propagateChange(this.searchValue);
+        this.highlighted.emit(highlightedItem);
+    }
+
+    private closeAutocomplete() {
+        this.autocompleteService.isOpen = false;
+        this.searchState = this.searchStates.UnTracked;
     }
 }

@@ -2,26 +2,26 @@
     <input [attr.id]="inputId"
            [attr.class]="inputClass"
            (input)="onType($event)"
-           [(ngModel)]="searchValue"/>
-    <div class="autocomplete" *ngIf="searchState !== searchStates.Untracked">
+           [(ngModel)]="searchValue"
+           (blur)="onInputBlur($event)" />
+    <div class="autocomplete-list" *ngIf="searchState && searchState !== searchStates.Untracked">
         <div *ngIf="searchState === searchStates.Loading || searchState === searchStates.Finished && searchResult === 0">
             <div>{{searchState === searchStates.Loading ? searchingText : notFoundText}}</div>
         </div>
 
-        <div *ngIf="searchState === searchStates.Finished && searchResult?.length > 0">
-            <div *ngFor="let item of searchResult; index as i">
-                <div cmpl-option
-                     [itemIndex]="i"
-                     class="option"
-                     [ngClass]="{'cmpl-option-active': i === itemListService.activeIndex}"
-                     tabindex="0">
-                    <ng-template #defaultOptionTemplate>
-                        <span class="cmpl-option-value">{{item.description}}</span>
-                    </ng-template>
+        <div *ngIf="searchState === searchStates.Finished && searchResult?.length > 0" [class]="OPTION_LIST_WRAPPER_CLASS">
+            <div *ngFor="let item of searchResult; index as i"
+                 cmpl-option
+                 [itemIndex]="i"
+                 [class]="OPTION_CLASS"
+                 [ngClass]="{'cmpl-option-active': i === itemListService.activeIndex}">
+                <ng-template #defaultOptionTemplate>
+                    <span class="cmp-option-value">{{item.value}}</span>
+                    <span *ngIf="item.description" class="cmpl-option-description">{{item.description}}</span>
+                </ng-template>
 
-                    <ng-template [ngTemplateOutlet]="optionTemplate || defaultOptionTemplate" [ngTemplateOutletContext]="{ $implicit: item.originalObject }">
-                    </ng-template>
-                </div>
+                <ng-template [ngTemplateOutlet]="optionTemplate || defaultOptionTemplate" [ngTemplateOutletContext]="{ $implicit: item.originalObject }">
+                </ng-template>
             </div>
         </div>
     </div>

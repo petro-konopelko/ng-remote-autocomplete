@@ -10,9 +10,9 @@ import { AutocompleteService } from "../services/autocomplete.service";
 @Directive({
     selector: '[cmpl-option]',
     host: {
-        '(mouseenter)': 'onMouseEnter()',
-        '(mouseleave)': 'onMouseLeave()',
-        '(click)': 'onClick()'
+        '(mouseenter)': 'onMouseEnter($event)',
+        '(mouseleave)': 'onMouseLeave($event)',
+        '(click)': 'onClick($event)'
     }
 })
 export class OptionDirective {

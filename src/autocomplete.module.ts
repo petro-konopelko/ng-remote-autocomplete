@@ -24,10 +24,6 @@ import { AutocompleteService } from "./services/autocomplete.service";
         AutocompleteConponent,
         OptionTemplateDirective
     ],
-    providers: [
-        AutocompleteService,
-        ItemListService
-    ]
 })
 export class AutocompleteModule {
 }
