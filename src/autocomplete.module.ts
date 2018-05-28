@@ -25,5 +25,5 @@ import { AutocompleteService } from "./services/autocomplete.service";
         OptionTemplateDirective
     ],
 })
-export class AutocompleteModule {
+export class RemoteAutocompleteModule {
 }
