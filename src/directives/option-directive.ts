@@ -30,7 +30,7 @@ export class OptionDirective {
         this.itemListService.restoreIntialActiveIndex();
     }
 
-    onClick() {
+    onClick(event: MouseEvent) {
         this.autocompleteService.selectItemSubject.next(this.index);
     }
 }
