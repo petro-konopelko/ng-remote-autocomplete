@@ -40,6 +40,7 @@ import { Autocomplete } from "../interfaces/autocomplete";
 @Component({
     selector: 'remote-autocomplete',
     templateUrl: './autocomplete.component.html',
+    styleUrls: ['./autocomplete.component.css' ],
     providers: [
         AutocompleteService,
         ItemListService,

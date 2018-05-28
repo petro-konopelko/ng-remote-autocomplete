@@ -1,0 +1,10 @@
+.option-list-wrapper {
+    border: 1px solid black;
+    max-height: 200px;
+    overflow: auto;
+    max-width: 200px;
+}
+
+.autocomplete-option-active {
+    background-color: lightgray;
+}
