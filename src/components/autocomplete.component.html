@@ -18,7 +18,7 @@
 
     <div *ngIf="searchState === searchStates.Finished && searchResult?.length > 0" [class]="OPTION_LIST_WRAPPER_CLASS">
         <div *ngFor="let item of searchResult; index as i"
-             cmpl-option
+             remote-autocomplete-option
              [itemIndex]="i"
              [class]="OPTION_CLASS"
              [ngClass]="{'autocomplete-option-active': i === itemListService.activeIndex}">
@@ -27,7 +27,7 @@
                 <span *ngIf="item.description" [class]="OPTION_DESCRIPTION_CLASS">{{item.description}}</span>
             </ng-template>
 
-            <ng-template [ngTemplateOutlet]="optionTemplate || defaultOptionTemplate" [ngTemplateOutletContext]="{ $implicit: item.originalObject }">
+            <ng-template [ngTemplateOutlet]="optionTemplate || defaultOptionTemplate" [ngTemplateOutletContext]="{ $implicit: item }">
             </ng-template>
         </div>
     </div>

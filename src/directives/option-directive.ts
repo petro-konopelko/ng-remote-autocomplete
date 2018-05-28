@@ -8,7 +8,7 @@ import { ItemListService } from "../services/item-list.service";
 import { AutocompleteService } from "../services/autocomplete.service";
 
 @Directive({
-    selector: '[cmpl-option]',
+    selector: '[remote-autocomplete-option]',
     host: {
         '(mouseenter)': 'onMouseEnter($event)',
         '(mouseleave)': 'onMouseLeave($event)',
