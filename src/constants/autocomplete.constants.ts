@@ -6,6 +6,7 @@ export const DEFAULT_PAUSE: number = 100;
 export const NOT_FOUND_TEXT: string = "No results found";
 export const SEARCHING_TEXT: string = "Searching...";
 
+export const SEARCH_WRAPPER_CLASS: string = "autocomplete-search-wrapper";
 export const OPTION_VALUE_CLASS: string = "autocomplete-option-value";
 export const OPTION_DESCRIPTION_CLASS: string = "autocomplete-option-description";
 export const OPTION_CLASS: string = "autocomplete-option";

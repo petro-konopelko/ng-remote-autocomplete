@@ -3,32 +3,34 @@
            [attr.id]="inputId"
            [attr.name]="inputName"
            [attr.class]="inputClass"
-           [attr.disabled]="disabled"
+           [attr.disabled]="disabled ? 'disabled' : null"
            maxlength="{{maxChars}}"
            (input)="onType()"
            (blur)="onInputBlur($event)"
            #input />
-    <div *ngIf="searchState === searchStates.Loading">
-        <span [class]="LOADING_CLASS">{{searchingText}}</span>
-    </div>
+    <div *ngIf="searchState !== searchStates.Untracked" [class]="SEARCH_WRAPPER_CLASS">
+        <div *ngIf="searchState === searchStates.Loading">
+            <span [class]="LOADING_CLASS">{{searchingText}}</span>
+        </div>
 
-    <div *ngIf="searchState === searchStates.Finished && searchResult.length === 0">
-        <span [class]="RESULTS_NOT_FOUND_CLASS">{{notFoundText}}</span>
-    </div>
+        <div *ngIf="searchState === searchStates.Finished && searchResult.length === 0">
+            <span [class]="RESULTS_NOT_FOUND_CLASS">{{notFoundText}}</span>
+        </div>
 
-    <div *ngIf="searchState === searchStates.Finished && searchResult?.length > 0" [class]="OPTION_LIST_WRAPPER_CLASS">
-        <div *ngFor="let item of searchResult; index as i"
-             remote-autocomplete-option
-             [itemIndex]="i"
-             [class]="OPTION_CLASS"
-             [ngClass]="{'autocomplete-option-active': i === itemListService.activeIndex}">
-            <ng-template #defaultOptionTemplate>
-                <span [class]="OPTION_VALUE_CLASS">{{item.value}}</span>
-                <span *ngIf="item.description" [class]="OPTION_DESCRIPTION_CLASS">{{item.description}}</span>
-            </ng-template>
+        <div *ngIf="searchState === searchStates.Finished && searchResult?.length > 0" [class]="OPTION_LIST_WRAPPER_CLASS">
+            <div *ngFor="let item of searchResult; index as i"
+                 remote-autocomplete-option
+                 [itemIndex]="i"
+                 [class]="OPTION_CLASS"
+                 [ngClass]="{'autocomplete-option-active': i === itemListService.activeIndex}">
+                <ng-template #defaultOptionTemplate>
+                    <span [class]="OPTION_VALUE_CLASS">{{item.value}}</span>
+                    <span *ngIf="item.description" [class]="OPTION_DESCRIPTION_CLASS">{{item.description}}</span>
+                </ng-template>
 
-            <ng-template [ngTemplateOutlet]="optionTemplate || defaultOptionTemplate" [ngTemplateOutletContext]="{ $implicit: item }">
-            </ng-template>
+                <ng-template [ngTemplateOutlet]="optionTemplate || defaultOptionTemplate" [ngTemplateOutletContext]="{ $implicit: item }">
+                </ng-template>
+            </div>
         </div>
     </div>
 </div>

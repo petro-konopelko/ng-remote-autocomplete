@@ -22,6 +22,7 @@ import {
     NOT_FOUND_TEXT,
     SEARCHING_TEXT,
     DEFAULT_ACTIVE_INDEX,
+    SEARCH_WRAPPER_CLASS,
     OPTION_LIST_WRAPPER_CLASS,
     OPTION_CLASS,
     OPTION_VALUE_CLASS,
@@ -64,6 +65,7 @@ export class RemoteAutocompleteComponent implements OnInit, OnDestroy, ControlVa
     @Input('notFoundText') notFoundText: string;
     @Input('searchingText') searchingText: string;
 
+    @Output('type') type: EventEmitter<void> = new EventEmitter<void>();
     @Output('highlighted') highlighted: EventEmitter<AutocompleteItem> = new EventEmitter<AutocompleteItem>();
     @Output('selected') selected: EventEmitter<AutocompleteItem> = new EventEmitter<AutocompleteItem>();
     @Output('blur') blur: EventEmitter<Event> = new EventEmitter<Event>();
@@ -74,9 +76,10 @@ export class RemoteAutocompleteComponent implements OnInit, OnDestroy, ControlVa
     @ViewChild('input') inputField: ElementRef;
 
     public searchStates = SearchStateType;
-    public searchState = SearchStateType.UnTracked;
+    public searchState = SearchStateType.Untracked;
     public searchValue: string;
     public searchResult: AutocompleteItem[];
+    public SEARCH_WRAPPER_CLASS: string = SEARCH_WRAPPER_CLASS;
     public OPTION_LIST_WRAPPER_CLASS: string = OPTION_LIST_WRAPPER_CLASS;
     public OPTION_CLASS: string = OPTION_CLASS;
     public OPTION_VALUE_CLASS: string = OPTION_VALUE_CLASS;
@@ -140,6 +143,7 @@ export class RemoteAutocompleteComponent implements OnInit, OnDestroy, ControlVa
     onType(): void{
         this.propagateChange(this.searchValue);
         this.originalSearchValue = this.searchValue;
+        this.type.emit();
 
         if (this.validsearchTerm()) {
             this.searchState = this.searchStates.Loading;
@@ -160,7 +164,7 @@ export class RemoteAutocompleteComponent implements OnInit, OnDestroy, ControlVa
 
         this.propagateTouched(this.searchValue);
         this.close();
-        this.blur.emit();
+        this.blur.emit(event);
     }
 
     get inputClass(): string {
@@ -198,7 +202,7 @@ export class RemoteAutocompleteComponent implements OnInit, OnDestroy, ControlVa
 
     close() {
         this.autocompleteService.isOpen = false;
-        this.searchState = this.searchStates.UnTracked;
+        this.searchState = this.searchStates.Untracked;
     }
 
     private resetSearchTimeout() {
@@ -217,8 +221,10 @@ export class RemoteAutocompleteComponent implements OnInit, OnDestroy, ControlVa
     private search() {
         if (this.validsearchTerm()) {
             this.service.get(this.searchValue).first().subscribe(
-                (results: any[]) => {
-                    if (this.searchState !== this.searchStates.UnTracked) {
+                (results: AutocompleteItem[]) => {
+                    if (this.searchState !== this.searchStates.Untracked) {
+                        this.itemListService.restoreIntialActiveIndex();
+                        this.autocompleteService.isOpen = results.length > 0;
                         this.itemListService.items = results;
                         this.searchResult = results;
                         this.searchState = this.searchStates.Finished;

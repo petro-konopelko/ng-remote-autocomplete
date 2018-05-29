@@ -89,14 +89,16 @@ If you don't provide the service then the module will throw and Exception that *
 
 |Event Name|Type|Description|
 | ------ | ------ |------ |
-| highlighted | AutocompleteItem  | |
-| selected | AutocompleteItem  | |
+| type | - | The type event on the input |
+| highlighted | AutocompleteItem or null | The event is triggered when an option is higlighted with AutocompleteItem item or nul when it is unhighlighted |
+| selected | AutocompleteItem  | The event is triggered when an option is selected |
 | blur | FocusEvent  | **Important:** isn't fired when option is being selected and input loses focus|
 
 ### Available classes
 |Class|Description|
 | ------ | ------ |
 | .remote-autocomplete | The main class of the **whole component**  |
+| .autocomplete-search-wrapper | The class of the div which contains **loading, not found and otptions divs**  |
 | .option-list-wrapper | The class of the **main div where options are placed** |
 |.autocomplete-option|The class of an **option**|
 | .autocomplete-option-active | The class of the **highlighted option**  |
