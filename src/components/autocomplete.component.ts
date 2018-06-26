@@ -5,9 +5,12 @@
     Output,
     EventEmitter,
     ContentChild,
-    TemplateRef,    OnDestroy,
-    forwardRef,    ViewChild,
-    ElementRef} from "@angular/core";
+    TemplateRef,
+    OnDestroy,
+    forwardRef,
+    ViewChild,
+    ElementRef
+} from "@angular/core";
 
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from "@angular/forms";
 
@@ -64,6 +67,7 @@ export class RemoteAutocompleteComponent implements OnInit, OnDestroy, ControlVa
     @Input('disabled') disabled: boolean;
     @Input('notFoundText') notFoundText: string;
     @Input('searchingText') searchingText: string;
+    @Input('placeholder') placeholder: string;
 
     @Output('type') type: EventEmitter<void> = new EventEmitter<void>();
     @Output('highlighted') highlighted: EventEmitter<AutocompleteItem> = new EventEmitter<AutocompleteItem>();

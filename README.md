@@ -81,6 +81,7 @@ If you don't provide the service then the module will throw and Exception that *
 | inputId | The id for the input |string|false|-|
 | inputName | The name for the input |string|false|-|
 | inputClass | The array of string for the input |string[]|false|-|
+| placeholder | The text to be placed as placeholder |string|false|-|
 |disabled|The property if input should be disabled|boolean|false|false|
 |notFoundText|The text which will be displayed if there is no result|string|false|"No results found"|
 |searchingText|The text which will be displayed during the search|string|false|"Searching..."|

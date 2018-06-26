@@ -4,6 +4,7 @@
            [attr.name]="inputName"
            [attr.class]="inputClass"
            [attr.disabled]="disabled ? 'disabled' : null"
+           [attr.placeholder]="placeholder"
            maxlength="{{maxChars}}"
            (input)="onType()"
            (blur)="onInputBlur($event)"
