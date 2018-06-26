@@ -1,5 +1,5 @@
 import { ElementRef } from "@angular/core";
-import { OPTION_LIST_WRAPPER_CLASS, OPTION_CLASS, DEFAULT_ACTIVE_INDEX } from "../constants/autocomplete.constants";
+import { SEARCH_WRAPPER_CLASS, OPTION_CLASS, DEFAULT_ACTIVE_INDEX } from "../constants/autocomplete.constants";
 
 export class ScrollService {
     constructor(private element: ElementRef) {
@@ -7,7 +7,7 @@ export class ScrollService {
 
     handleKeyboarOptionNavigation(activeIndex: number): void {
         const autocompleteElement = <HTMLElement>this.element.nativeElement;
-        const listElement = autocompleteElement.querySelector(`.${OPTION_LIST_WRAPPER_CLASS}`);
+        const listElement = autocompleteElement.querySelector(`.${SEARCH_WRAPPER_CLASS}`);
 
         if (listElement) {
             if (activeIndex === DEFAULT_ACTIVE_INDEX) {

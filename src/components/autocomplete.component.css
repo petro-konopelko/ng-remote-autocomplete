@@ -1,5 +1,5 @@
 .autocomplete-search-wrapper {
-    border: 1px solid black;
+    border: 1px solid #ccc;
     max-height: 200px;
     overflow: auto;
     max-width: 200px;
