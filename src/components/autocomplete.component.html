@@ -8,6 +8,7 @@
            maxlength="{{maxChars}}"
            (input)="onType()"
            (blur)="onInputBlur($event)"
+           (focus)="onInputFocus($event)"
            #input />
     <div *ngIf="searchState !== searchStates.Untracked" [class]="SEARCH_WRAPPER_CLASS">
         <div *ngIf="searchState === searchStates.Loading">

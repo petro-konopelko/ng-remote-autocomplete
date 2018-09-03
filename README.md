@@ -74,7 +74,7 @@ If you don't provide the service then the module will throw and Exception that *
 
 |Property Name|Description |Type|Required|Default value|
 | ------ | ------ |------ |------ |------ |
-| service | Implementation of **AutocompleteSourceService**  | AutocompleteSourceService | true
+| service | Implementation of **AutocompleteSourceService** or **ParameterizedAutocompleteSourceService**  | AutocompleteSourceService \| ParameterizedAutocompleteSourceService  | true
 | minSearchLength | Minimum value length from which searching will be triggered | number | false|1
 | maxChars | Allowable max length of search field | number | false | 2147483647|
 | pause | The pause after which searching will be triggered  |number|false|100|
@@ -82,6 +82,7 @@ If you don't provide the service then the module will throw and Exception that *
 | inputName | The name for the input |string|false|-|
 | inputClass | The array of string for the input |string[]|false|-|
 | placeholder | The text to be placed as placeholder |string|false|-|
+| searchParameters | The search parameters which are passed to the search method of **ParameterizedAutocompleteSourceService** interface implementation |any|true only if type of service is **ParameterizedAutocompleteSourceService** |-|
 |disabled|The property if input should be disabled|boolean|false|false|
 |notFoundText|The text which will be displayed if there is no result|string|false|"No results found"|
 |searchingText|The text which will be displayed during the search|string|false|"Searching..."|
@@ -93,6 +94,7 @@ If you don't provide the service then the module will throw and Exception that *
 | type | - | The type event on the input |
 | highlighted | AutocompleteItem or null | The event is triggered when an option is higlighted with AutocompleteItem item or nul when it is unhighlighted |
 | selected | AutocompleteItem  | The event is triggered when an option is selected |
+| focus | FocusEvent  | The event is triggered when the input get focus |
 | blur | FocusEvent  | **Important:** isn't fired when option is being selected and input loses focus|
 
 ### Available classes

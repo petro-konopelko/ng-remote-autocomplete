@@ -15,6 +15,7 @@
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from "@angular/forms";
 
 import { Subscription } from 'rxjs/Rx';
+import { Observable } from "rxjs/Observable";
 
 import { AutocompleteItem } from "../interfaces/autocomplete.item";
 
@@ -39,12 +40,13 @@ import { OptionTemplateDirective } from "../directives/option-template.directive
 import { ItemListService } from "../services/item-list.service";
 import { AutocompleteSourceService } from "../interfaces/autocomplete-source.service";
 import { AutocompleteService } from "../services/autocomplete.service";
+import { ParameterizedAutocompleteSourceService } from "../interfaces/parameterized-autocomplete-sourse.servise";
 import { Autocomplete } from "../interfaces/autocomplete";
 
 @Component({
     selector: 'remote-autocomplete',
     templateUrl: './autocomplete.component.html',
-    styleUrls: ['./autocomplete.component.css' ],
+    styleUrls: ['./autocomplete.component.css'],
     providers: [
         AutocompleteService,
         ItemListService,
@@ -57,7 +59,7 @@ import { Autocomplete } from "../interfaces/autocomplete";
 })
 
 export class RemoteAutocompleteComponent implements OnInit, OnDestroy, ControlValueAccessor, Autocomplete {
-    @Input('service') service: AutocompleteSourceService;
+    @Input('service') service: AutocompleteSourceService | ParameterizedAutocompleteSourceService;
     @Input('minSearchLength') minChars: number;
     @Input('maxChars') maxChars: number;
     @Input('pause') pause: number;
@@ -68,11 +70,13 @@ export class RemoteAutocompleteComponent implements OnInit, OnDestroy, ControlVa
     @Input('notFoundText') notFoundText: string;
     @Input('searchingText') searchingText: string;
     @Input('placeholder') placeholder: string;
+    @Input('searchParameters') searchParameters: any;
 
     @Output('type') type: EventEmitter<void> = new EventEmitter<void>();
     @Output('highlighted') highlighted: EventEmitter<AutocompleteItem> = new EventEmitter<AutocompleteItem>();
     @Output('selected') selected: EventEmitter<AutocompleteItem> = new EventEmitter<AutocompleteItem>();
     @Output('blur') blur: EventEmitter<Event> = new EventEmitter<Event>();
+    @Output('focus') focusEvent: EventEmitter<Event> = new EventEmitter<Event>();
 
     //custom template
     @ContentChild(OptionTemplateDirective, { read: TemplateRef }) optionTemplate: TemplateRef<any>;
@@ -103,9 +107,7 @@ export class RemoteAutocompleteComponent implements OnInit, OnDestroy, ControlVa
     }
 
     ngOnInit(): void {
-        if (!this.service) {
-            throw new Error("AutocompleteService must be implemented");
-        }
+        this.validateService();
 
         this.minChars = this.minChars || DEFAULT_MIN_SEARCH_LENGTH;
         this.maxChars = this.maxChars || DEFAULT_MAX_CHARS;
@@ -144,7 +146,7 @@ export class RemoteAutocompleteComponent implements OnInit, OnDestroy, ControlVa
         this.propagateTouched = fn;
     }
 
-    onType(): void{
+    onType(): void {
         this.propagateChange(this.searchValue);
         this.originalSearchValue = this.searchValue;
         this.type.emit();
@@ -171,6 +173,10 @@ export class RemoteAutocompleteComponent implements OnInit, OnDestroy, ControlVa
         this.blur.emit(event);
     }
 
+    onInputFocus(event: Event) {
+        this.focusEvent.emit(event);
+    }
+
     get inputClass(): string {
         let classes: string = '';
 
@@ -179,6 +185,29 @@ export class RemoteAutocompleteComponent implements OnInit, OnDestroy, ControlVa
         }
 
         return classes;
+    }
+
+    focus() {
+        (<HTMLInputElement>this.inputField.nativeElement).focus();
+    }
+
+    open() {
+        this.onType();
+    }
+
+    close() {
+        this.autocompleteService.isOpen = false;
+        this.searchState = this.searchStates.Untracked;
+    }
+
+    private validateService(): void {
+        if (!this.service) {
+            throw new Error("AutocompleteService must be implemented");
+        }
+
+        if (this.isParameterizedSearch(this.service) && !this.searchParameters) {
+            throw new Error("Please provide additionalSearchParams or just provide AutocompleteSourceService instaead of ParameterizedAutocompleteSourceService");
+        }
     }
 
     private onActiveIndexChanged(activeIndex: number): void {
@@ -196,19 +225,6 @@ export class RemoteAutocompleteComponent implements OnInit, OnDestroy, ControlVa
         this.highlighted.emit(highlightedItem);
     }
 
-    focus() {
-        (<HTMLInputElement>this.inputField.nativeElement).focus();
-    }
-
-    open() {
-        this.onType();
-    }
-
-    close() {
-        this.autocompleteService.isOpen = false;
-        this.searchState = this.searchStates.Untracked;
-    }
-
     private resetSearchTimeout() {
         this.clearSearchTimeout();
         this.setSearchTimeout();
@@ -224,7 +240,7 @@ export class RemoteAutocompleteComponent implements OnInit, OnDestroy, ControlVa
 
     private search() {
         if (this.validsearchTerm()) {
-            this.service.get(this.searchValue).first().subscribe(
+            this.performSearch().first().subscribe(
                 (results: AutocompleteItem[]) => {
                     if (this.searchState !== this.searchStates.Untracked) {
                         this.itemListService.restoreIntialActiveIndex();
@@ -238,7 +254,19 @@ export class RemoteAutocompleteComponent implements OnInit, OnDestroy, ControlVa
         }
     }
 
+    private performSearch(): Observable<AutocompleteItem[]> {
+        if (this.isParameterizedSearch(this.service)) {
+            return (<ParameterizedAutocompleteSourceService>this.service).getWithParams(this.searchValue, this.searchParameters);
+        } else {
+            return (<AutocompleteSourceService>this.service).get(this.searchValue);
+        }
+    }
+
     private validsearchTerm() {
         return this.searchValue && this.searchValue.length >= this.minChars;
+    }
+
+    private isParameterizedSearch(service: AutocompleteSourceService | ParameterizedAutocompleteSourceService): service is ParameterizedAutocompleteSourceService {
+        return (<ParameterizedAutocompleteSourceService>service).getWithParams !== undefined;
     }
 }
