@@ -35,7 +35,7 @@ import { RemoteAutocompleteModule } from "ng-remote-autocomplete";
 })
 export class AppModule { }
 ```
- - implement ***get*** method of **AutocompleteSourceService** which returns array of **AutocompleteItem**
+ - implement ***get*** method of **AutocompleteSourceService** or **ParameterizedAutocompleteSourceService** which returns array of **AutocompleteItem**
 
 ```ts
 import { Observable } from "rxjs/Rx";
@@ -68,7 +68,11 @@ export  class  AppComponent {
 constructor(public  itemService:  ItemService) {
 }
 ```
-If you don't provide the service then the module will throw and Exception that **AutocompleteSourceService** must be provided.
+
+### Exceptions
+
+If you don't provide the service then the module will throw and Exception that **AutocompleteSourceService** or **ParameterizedAutocompleteSourceService** must be provided.
+If you provide **ParameterizedAutocompleteSourceService** service and don't provide **searchParameters** then autocmplete component will throw Exception.
 
 ### Api
 
