@@ -239,11 +239,12 @@ export class RemoteAutocompleteComponent implements OnInit, OnDestroy, ControlVa
     }
 
     private search() {
+        this.itemListService.restoreIntialActiveIndex();
+        
         if (this.validsearchTerm()) {
             this.performSearch().first().subscribe(
                 (results: AutocompleteItem[]) => {
                     if (this.searchState !== this.searchStates.Untracked) {
-                        this.itemListService.restoreIntialActiveIndex();
                         this.autocompleteService.isOpen = results.length > 0;
                         this.itemListService.items = results;
                         this.searchResult = results;
