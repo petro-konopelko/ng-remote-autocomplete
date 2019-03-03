@@ -5,6 +5,7 @@
            [attr.class]="inputClass"
            [attr.disabled]="disabled ? 'disabled' : null"
            [attr.placeholder]="placeholder"
+           [attr.autocomplete]="autocompleteAttr"
            maxlength="{{maxChars}}"
            (input)="onType()"
            (blur)="onInputBlur($event)"
