@@ -81,6 +81,7 @@ If you provide **ParameterizedAutocompleteSourceService** service and don't prov
 | service | Implementation of **AutocompleteSourceService** or **ParameterizedAutocompleteSourceService**  | AutocompleteSourceService \| ParameterizedAutocompleteSourceService  | true
 | minSearchLength | Minimum value length from which searching will be triggered | number | false|1
 | autocompleteAttr | A value for the autocomplete attribute of the input | string | false|null
+| tabindex | A value for the tabindex attribute | number | false|null
 | maxChars | Allowable max length of search field | number | false | 2147483647|
 | pause | The pause after which searching will be triggered  |number|false|100|
 | inputId | The id for the input |string|false|-|

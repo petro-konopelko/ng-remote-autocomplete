@@ -6,6 +6,7 @@
            [attr.disabled]="disabled ? 'disabled' : null"
            [attr.placeholder]="placeholder"
            [attr.autocomplete]="autocompleteAttr"
+           [attr.tabindex]="tabindex"
            maxlength="{{maxChars}}"
            (input)="onType()"
            (blur)="onInputBlur($event)"
@@ -26,7 +27,7 @@
                  [itemIndex]="i"
                  [class]="OPTION_CLASS"
                  [ngClass]="{'autocomplete-option-active': i === itemListService.activeIndex}"
-				 tabindex="-1">
+                 tabindex="-1">
                 <ng-template #defaultOptionTemplate>
                     <span [class]="OPTION_VALUE_CLASS">{{item.value}}</span>
                     <span *ngIf="item.description" [class]="OPTION_DESCRIPTION_CLASS">{{item.description}}</span>

@@ -72,6 +72,7 @@ export class RemoteAutocompleteComponent implements OnInit, OnDestroy, ControlVa
     @Input('placeholder') placeholder: string;
     @Input('searchParameters') searchParameters: any;
     @Input('autocompleteAttr') autocompleteAttr: string;
+    @Input('tabindex') tabindex: number;
 
     @Output('type') type: EventEmitter<void> = new EventEmitter<void>();
     @Output('highlighted') highlighted: EventEmitter<AutocompleteItem> = new EventEmitter<AutocompleteItem>();
@@ -241,7 +242,7 @@ export class RemoteAutocompleteComponent implements OnInit, OnDestroy, ControlVa
 
     private search() {
         this.itemListService.restoreIntialActiveIndex();
-        
+
         if (this.validsearchTerm()) {
             this.performSearch().first().subscribe(
                 (results: AutocompleteItem[]) => {
