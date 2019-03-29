@@ -207,7 +207,7 @@ export class RemoteAutocompleteComponent implements OnInit, OnDestroy, ControlVa
             throw new Error("AutocompleteService must be implemented");
         }
 
-        if (this.isParameterizedSearch(this.service) && !this.searchParameters) {
+        if (this.isParameterizedSearch(this.service) && (this.searchParameters === undefined || this.searchParameters === null)) {
             throw new Error("Please provide additionalSearchParams or just provide AutocompleteSourceService instaead of ParameterizedAutocompleteSourceService");
         }
     }
