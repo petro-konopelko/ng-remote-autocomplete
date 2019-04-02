@@ -111,7 +111,7 @@ export class RemoteAutocompleteComponent implements OnInit, OnDestroy, ControlVa
     ngOnInit(): void {
         this.validateService();
 
-        this.minChars = this.minChars || DEFAULT_MIN_SEARCH_LENGTH;
+        this.minChars = this.getDefaultIfNullOrUndefined(this.minChars, DEFAULT_MIN_SEARCH_LENGTH);
         this.maxChars = this.maxChars || DEFAULT_MAX_CHARS;
         this.pause = this.pause || DEFAULT_PAUSE;
         this.notFoundText = this.notFoundText || NOT_FOUND_TEXT;
@@ -266,10 +266,16 @@ export class RemoteAutocompleteComponent implements OnInit, OnDestroy, ControlVa
     }
 
     private validsearchTerm() {
-        return this.searchValue && this.searchValue.length >= this.minChars;
+        return (this.searchValue || '').length >= this.minChars;
     }
 
     private isParameterizedSearch(service: AutocompleteSourceService | ParameterizedAutocompleteSourceService): service is ParameterizedAutocompleteSourceService {
         return (<ParameterizedAutocompleteSourceService>service).getWithParams !== undefined;
+    }
+
+    private getDefaultIfNullOrUndefined<T>(value: T, defaultValue: T): T {
+        return value === undefined || value === null
+            ? defaultValue
+            : value;
     }
 }
