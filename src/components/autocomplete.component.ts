@@ -122,6 +122,7 @@ export class RemoteAutocompleteComponent implements OnInit, OnDestroy, ControlVa
         });
 
         this.selectSubscription = this.autocompleteService.selectItemSubject.subscribe((index: number) => {
+            this.itemListService.restoreIntialActiveIndex();
             const result = this.searchResult[index];
             this.propagateChange(result.value);
             this.selected.emit(result);
