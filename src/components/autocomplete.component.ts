@@ -73,6 +73,7 @@ export class RemoteAutocompleteComponent implements OnInit, OnDestroy, ControlVa
     @Input('searchParameters') searchParameters: any;
     @Input('autocompleteAttr') autocompleteAttr: string;
     @Input('tabindex') tabindex: number;
+    @Input('stopEnterPropagationOnSelect') stopEnterPropagationOnSelect: boolean = false;
 
     @Output('type') type: EventEmitter<void> = new EventEmitter<void>();
     @Output('highlighted') highlighted: EventEmitter<AutocompleteItem> = new EventEmitter<AutocompleteItem>();

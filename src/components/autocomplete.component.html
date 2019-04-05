@@ -1,4 +1,4 @@
-﻿<div keyboard-navigation class="remote-autocomplete">
+﻿<div keyboard-navigation [stopEnterPropagation]="stopEnterPropagationOnSelect" class="remote-autocomplete">
     <input [(ngModel)]="searchValue"
            [attr.id]="inputId"
            [attr.name]="inputName"
