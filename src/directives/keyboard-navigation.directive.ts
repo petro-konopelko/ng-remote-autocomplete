@@ -1,6 +1,8 @@
 import {
     Directive,
-    HostListener,    ElementRef
+    HostListener,
+    ElementRef,
+    Input
 } from "@angular/core";
 
 import { KeyCode } from "../enums/key-kode";
@@ -13,6 +15,8 @@ import { ScrollService } from "../services/scroll-service";
 })
 export class KeyboardNavigationDirective {
     private readonly scrollService: ScrollService;
+
+    @Input() stopEnterPropagation: boolean = false;
 
     constructor(private autocompleteService: AutocompleteService,
         private itemListService: ItemListService,
@@ -50,6 +54,10 @@ export class KeyboardNavigationDirective {
         if (this.itemListService.activeIndex >= 0) {
             this.autocompleteService.selectItemSubject.next(this.itemListService.activeIndex);
             event.preventDefault();
+
+            if (this.stopEnterPropagation) {
+                event.stopPropagation();
+            }
         }
     }
 }

@@ -92,6 +92,7 @@ If you provide **ParameterizedAutocompleteSourceService** service and don't prov
 |disabled|The property if input should be disabled|boolean|false|false|
 |notFoundText|The text which will be displayed if there is no result|string|false|"No results found"|
 |searchingText|The text which will be displayed during the search|string|false|"Searching..."|
+|stopEnterPropagationOnSelect|True if **keydown** event should not be dispatched when autocomplete item is selected using Enter key|boolean|false|false|
 
 ### Output events
 

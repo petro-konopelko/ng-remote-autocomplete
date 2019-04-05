@@ -73,6 +73,7 @@ export class RemoteAutocompleteComponent implements OnInit, OnDestroy, ControlVa
     @Input('searchParameters') searchParameters: any;
     @Input('autocompleteAttr') autocompleteAttr: string;
     @Input('tabindex') tabindex: number;
+    @Input('stopEnterPropagationOnSelect') stopEnterPropagationOnSelect: boolean = false;
 
     @Output('type') type: EventEmitter<void> = new EventEmitter<void>();
     @Output('highlighted') highlighted: EventEmitter<AutocompleteItem> = new EventEmitter<AutocompleteItem>();
@@ -122,7 +123,6 @@ export class RemoteAutocompleteComponent implements OnInit, OnDestroy, ControlVa
         });
 
         this.selectSubscription = this.autocompleteService.selectItemSubject.subscribe((index: number) => {
-            this.itemListService.restoreIntialActiveIndex();
             const result = this.searchResult[index];
             this.propagateChange(result.value);
             this.selected.emit(result);
