@@ -112,6 +112,7 @@ export class RemoteAutocompleteComponent implements OnInit, OnDestroy, ControlVa
     ngOnInit(): void {
         this.validateService();
 
+        this.disabled = this.getDefaultIfNullOrUndefined(this.disabled, false);
         this.minChars = this.getDefaultIfNullOrUndefined(this.minChars, DEFAULT_MIN_SEARCH_LENGTH);
         this.maxChars = this.maxChars || DEFAULT_MAX_CHARS;
         this.pause = this.pause || DEFAULT_PAUSE;
@@ -147,6 +148,10 @@ export class RemoteAutocompleteComponent implements OnInit, OnDestroy, ControlVa
 
     registerOnTouched(fn: any) {
         this.propagateTouched = fn;
+    }
+
+    setDisabledState(isDisabled: boolean): void {
+        this.disabled = isDisabled;
     }
 
     onType(): void {
