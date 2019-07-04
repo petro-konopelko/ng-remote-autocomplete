@@ -90,7 +90,9 @@ If you provide **ParameterizedAutocompleteSourceService** service and don't prov
 | placeholder | The text to be placed as placeholder |string|false|-|
 | searchParameters | The search parameters which are passed to the search method of **ParameterizedAutocompleteSourceService** interface implementation |any|true only if type of service is **ParameterizedAutocompleteSourceService** |-|
 |disabled|The property if input should be disabled|boolean|false|false|
+|needToShowNotFoundText|The property which enable/disable showing not found text block|boolean|false|true|
 |notFoundText|The text which will be displayed if there is no result|string|false|"No results found"|
+|needToShowSearchingText|The property which enable/disable showing searching text block|boolean|false|true|
 |searchingText|The text which will be displayed during the search|string|false|"Searching..."|
 |stopEnterPropagationOnSelect|True if **keydown** event should not be dispatched when autocomplete item is selected using Enter key|boolean|false|false|
 

@@ -12,7 +12,8 @@
            (blur)="onInputBlur($event)"
            (focus)="onInputFocus($event)"
            #input />
-    <div *ngIf="searchState !== searchStates.Untracked" [class]="SEARCH_WRAPPER_CLASS">
+    <div *ngIf="searchState === searchStates.Loading && needToShowSearchingText || 
+                searchState === searchStates.Finished && (searchResult?.length > 0 || needToShowNotFoundText)" [class]="SEARCH_WRAPPER_CLASS">
         <div *ngIf="searchState === searchStates.Loading">
             <span [class]="LOADING_CLASS">{{searchingText}}</span>
         </div>
